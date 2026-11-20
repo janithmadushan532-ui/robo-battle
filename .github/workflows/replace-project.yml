@@ -48,18 +48,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add extracted/Food-adventure-3d-main
+          git add extracted/robo battle
 
           if git diff --cached --quiet; then
             echo "No new changes to save."
           else
-            git commit -m "Extract FOOD ADVENTURE 3D project files"
+            git commit -m "Extract robo battle project files"
             git push
           fi
 
       - name: Verify Saved Files
         run: |
-          test -f extracted/Food-adventure-3d-main/package.json
+          test -f extracted/robo battle/package.json
           echo "SUCCESS: Project files saved to repository!"
 
  
