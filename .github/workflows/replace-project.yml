@@ -1,0 +1,65 @@
+name: Extract and Save robo battle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-and-save:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check ZIP File
+        run: |
+          ZIP_FILE="robo battle.zip"
+
+          if [ ! -f "$ZIP_FILE" ]; then
+            echo "::error::ZIP file not found!"
+            ls -la
+            exit 1
+          fi
+
+      - name: Extract Project
+        run: |
+          mkdir -p extracted
+
+          unzip -q -o \
+            "robo battle.zip" \
+            -d extracted
+
+          PROJECT="extracted/Food-adventure-3d-main"
+
+          if [ ! -f "$PROJECT/package.json" ]; then
+            echo "::error::Project extraction failed!"
+            exit 1
+          fi
+
+          echo "Project extracted successfully!"
+
+      - name: Save Extracted Files to GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add extracted/Food-adventure-3d-main
+
+          if git diff --cached --quiet; then
+            echo "No new changes to save."
+          else
+            git commit -m "Extract FOOD ADVENTURE 3D project files"
+            git push
+          fi
+
+      - name: Verify Saved Files
+        run: |
+          test -f extracted/Food-adventure-3d-main/package.json
+          echo "SUCCESS: Project files saved to repository!"
+
+ 
